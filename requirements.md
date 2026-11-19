@@ -1,7 +1,7 @@
 # Project Requirements Document: Sales Insight Copilot
 
-**Version:** 1.0  
-**Phase:** Discovery & Requirements Engineering (Week 1)  
+**Version:** 1.1  
+**Phase:** Discovery & Requirements Engineering (Week 1 — Updated)  
 **Target Platform:** Web Application  
 
 ---
@@ -38,10 +38,24 @@ Hộ kinh doanh và các doanh nghiệp nhỏ thường gặp khó khăn trong v
 * **[Xác nhận]** Bảng điều khiển (Dashboard) hiển thị các chỉ số KPI doanh thu, lợi nhuận.
 * **[Xác nhận]** Thống kê sản phẩm bán chạy nhất và xác định nguồn doanh thu lớn nhất (Nguyên lý Pareto 80/20).
 * **[Đề xuất đã duyệt]** Quản lý mức tồn kho cơ bản: tự động trừ tồn kho theo số lượng bán và kích hoạt cảnh báo khi chạm ngưỡng tối thiểu.
+* **[Bổ sung v1.1]** Biểu đồ phân tích đa chiều theo **Khu vực địa lý (Region)** và **Danh mục sản phẩm (Category)** — cho phép người dùng lọc và so sánh hiệu quả bán hàng theo từng vùng hoặc nhóm hàng cụ thể.
 
 #### D. Trợ lý ảo (AI Copilot Chatbot)
 * **[Xác nhận]** Chatbot hỗ trợ giải đáp thắc mắc về số liệu kinh doanh bằng ngôn ngữ tự nhiên.
 * **[Xác nhận]** Khả năng tự động vẽ biểu đồ trực quan cơ bản (biểu đồ cột, biểu đồ đường) dựa trên kết quả truy vấn.
+* **[Bổ sung v1.1]** AI chủ động **giải thích xu hướng** (Trend Explanation): sau khi hiển thị số liệu hoặc biểu đồ, AI tự động cung cấp đoạn văn bản phân tích ngắn giải thích nguyên nhân tăng/giảm, so sánh kỳ trước và đề xuất điểm cần chú ý.
+
+#### E. Tra cứu Tài liệu Nghiệp vụ bằng RAG (Business Document Retrieval — RAG)
+* **[Bổ sung v1.1]** Tích hợp cơ chế **RAG (Retrieval-Augmented Generation)** cho phép người dùng tra cứu thông tin từ các tài liệu nội bộ (quy định chiết khấu, chính sách bán hàng, hướng dẫn sản phẩm, hợp đồng) bằng câu hỏi ngôn ngữ tự nhiên.
+* **[Bổ sung v1.1]** Hệ thống RAG sẽ trích xuất và trích dẫn chính xác đoạn văn bản nguồn từ tài liệu gốc khi trả lời, kèm theo tham chiếu (tên tài liệu, số trang).
+* **[Giả định kỹ thuật]** Tài liệu nghiệp vụ được nạp dưới dạng file `.pdf`, `.docx` hoặc `.txt`; được vector hóa (embedding) và lưu vào Vector Database (ví dụ: ChromaDB, FAISS).
+
+#### F. AI Tool Calling với Phân quyền (RBAC-restricted AI Tool Calling)
+* **[Bổ sung v1.1]** AI Copilot có khả năng **chủ động gọi các công cụ phân tích dữ liệu** (Function Calling / Tool Use) thay vì chỉ trả lời bằng văn bản — ví dụ: gọi hàm tính tổng doanh thu, hàm lọc dữ liệu theo kỳ, hàm xuất báo cáo PDF.
+* **[Bổ sung v1.1]** Áp dụng cơ chế **phân quyền dựa trên vai trò (RBAC — Role-Based Access Control)** để giới hạn công cụ AI được phép gọi:
+  * **Chủ doanh nghiệp**: Có quyền gọi tất cả công cụ (đọc, xuất báo cáo, xem dự báo).
+  * **Kế toán**: Chỉ được gọi công cụ đọc/truy vấn dữ liệu; không được phép gọi công cụ sửa/xóa dữ liệu gốc.
+* **[Giả định kỹ thuật]** Danh sách công cụ cho phép được định nghĩa trong file cấu hình phân quyền; mọi lần gọi công cụ đều được ghi nhật ký (audit log).
 
 ---
 
@@ -49,6 +63,7 @@ Hộ kinh doanh và các doanh nghiệp nhỏ thường gặp khó khăn trong v
 * Kết nối API trực tiếp theo thời gian thực với các hệ thống POS, ngân hàng hoặc phần mềm ERP chuyên dụng bên ngoài (chỉ tiếp nhận qua file Excel/CSV).
 * Hỗ trợ thanh toán trực tuyến hoặc xử lý đa tiền tệ (Multi-currency).
 * Tính năng tự động đặt hàng mua từ nhà cung cấp khi hết hàng (chỉ dừng ở mức cảnh báo tồn kho).
+* AI Tool Calling với quyền **ghi/xóa** dữ liệu gốc (chỉ cho phép đọc và truy vấn đối với Kế toán).
 
 ---
 
